@@ -1,5 +1,6 @@
 package com.alexandreseneviratne.kotlinnoteexercise
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -40,10 +41,17 @@ class NoteListActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         if (view.tag != null) {
-            val index: Int = view.tag as Int
-            val note: Note = notes[view.tag as Int]
-
-            Toast.makeText(this, note.title, Toast.LENGTH_SHORT).show()
+            showDetail(view.tag as Int)
         }
+    }
+
+    private fun showDetail(index: Int) {
+        val note: Note = notes[index]
+
+        val intent = Intent(this, NoteDetailActivity::class.java)
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE, note)
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE_INDEX, index)
+
+        startActivityForResult(intent, NoteDetailActivity.EDIT_NOTE_REQUEST_CODE)
     }
 }
