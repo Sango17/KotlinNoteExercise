@@ -23,6 +23,8 @@ class NoteListActivity : AppCompatActivity(), View.OnClickListener {
 
         setSupportActionBar(toolbar)
 
+        note_list_add_fab.setOnClickListener(this)
+
         notes = mutableListOf()
 
         notes.add(Note("Hello", "World"))
@@ -64,18 +66,33 @@ class NoteListActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun saveNote(note: Note, noteIndex: Int) {
-        notes[noteIndex] = note
+        if (noteIndex < 0) {
+            notes.add(0, note)
+        } else {
+            notes[noteIndex] = note
+        }
+
         adapter.notifyDataSetChanged()
     }
 
     override fun onClick(view: View) {
         if (view.tag != null) {
             showDetail(view.tag as Int)
+        } else {
+            when (view.id) {
+                R.id.note_list_add_fab -> {
+                    createNewNote()
+                }
+            }
         }
     }
 
+    private fun createNewNote() {
+        showDetail(-1)
+    }
+
     private fun showDetail(index: Int) {
-        val note: Note = notes[index]
+        val note: Note = if (index < 0) Note() else notes[index]
 
         val intent = Intent(this, NoteDetailActivity::class.java)
         intent.putExtra(NoteDetailActivity.EXTRA_NOTE, note)
