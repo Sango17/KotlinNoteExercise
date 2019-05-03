@@ -12,7 +12,7 @@ class ConfirmDeleteDialogFragment: DialogFragment() {
     }
 
     var listener: ConfirmDeleteDialogListener? = null
-    val noteTitle: String = ""
+    var noteTitle: String = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
