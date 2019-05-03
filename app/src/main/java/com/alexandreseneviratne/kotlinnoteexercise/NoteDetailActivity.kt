@@ -1,5 +1,6 @@
 package com.alexandreseneviratne.kotlinnoteexercise
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -14,6 +15,9 @@ class NoteDetailActivity : AppCompatActivity() {
         const val EXTRA_NOTE_INDEX: String = "noteIndex"
 
         const val EDIT_NOTE_REQUEST_CODE: Int = 1
+
+        const val ACTION_SAVE: String = "com.alexandreseneviratne.kotlinnoteexercise.actions.ACTION_SAVE"
+        const val ACTION_DELETE: String = "com.alexandreseneviratne.kotlinnoteexercise.actions.ACTION_DELETE"
     }
 
     private lateinit var noteTitle: TextView
@@ -50,6 +54,7 @@ class NoteDetailActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_save -> {
                 Toast.makeText(this, "ACTION_SAVE", Toast.LENGTH_SHORT).show()
+                saveNote()
                 return true
             }
             R.id.action_delete -> {
@@ -58,5 +63,17 @@ class NoteDetailActivity : AppCompatActivity() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun saveNote() {
+        note.title = noteTitle.text.toString()
+        note.text = noteText.text.toString()
+
+        val intent = Intent(ACTION_SAVE)
+        intent.putExtra(EXTRA_NOTE, note)
+        intent.putExtra(EXTRA_NOTE_INDEX, noteIndex)
+
+        setResult(EDIT_NOTE_REQUEST_CODE,intent)
+        finish()
     }
 }
