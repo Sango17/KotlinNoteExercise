@@ -3,7 +3,7 @@ package com.alexandreseneviratne.kotlinnoteexercise
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Note(val title: String = "", val text: String = "", val filename: String = "") : Parcelable {
+data class Note(var title: String = "", var text: String = "", val filename: String = "") : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
