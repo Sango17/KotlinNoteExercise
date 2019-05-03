@@ -1,5 +1,6 @@
 package com.alexandreseneviratne.kotlinnoteexercise
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -36,7 +37,35 @@ class NoteListActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView.adapter = adapter
 
         adapter.notifyDataSetChanged()
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != Activity.RESULT_OK || data == null) {
+            return
+        } else {
+            when (requestCode) {
+                 NoteDetailActivity.EDIT_NOTE_REQUEST_CODE-> processEditNote(data)
+            }
+        }
+    }
+
+    private fun processEditNote(data: Intent) {
+        val noteIndex: Int = data.getIntExtra(NoteDetailActivity.EXTRA_NOTE_INDEX, -1)
+
+        when (data.action) {
+            NoteDetailActivity.ACTION_SAVE -> {
+                val note: Note = data.getParcelableExtra(NoteDetailActivity.EXTRA_NOTE)
+                saveNote(note, noteIndex)
+            }
+            NoteDetailActivity.ACTION_DELETE -> {
+                return
+            }
+        }
+    }
+
+    private fun saveNote(note: Note, noteIndex: Int) {
+        notes[noteIndex] = note
+        adapter.notifyDataSetChanged()
     }
 
     override fun onClick(view: View) {
