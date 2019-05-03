@@ -1,5 +1,6 @@
 package com.alexandreseneviratne.kotlinnoteexercise
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import com.alexandreseneviratne.kotlinnoteexercise.fragment.ConfirmDeleteDialogFragment
 import kotlinx.android.synthetic.main.activity_note_detail.*
 
 class NoteDetailActivity : AppCompatActivity() {
@@ -53,16 +55,36 @@ class NoteDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_save -> {
-                Toast.makeText(this, "ACTION_SAVE", Toast.LENGTH_SHORT).show()
                 saveNote()
                 return true
             }
             R.id.action_delete -> {
-                Toast.makeText(this, "ACTION_DELETE", Toast.LENGTH_SHORT).show()
+                val dialog = ConfirmDeleteDialogFragment()
+                dialog.noteTitle = noteTitle.text.toString()
+                dialog.listener = object : ConfirmDeleteDialogFragment.ConfirmDeleteDialogListener {
+                    override fun onPositiveListener() {
+                        deleteNote()
+                    }
+
+                    override fun onNegativeListener() {
+                        TODO("nothing specific for the moment")
+                    }
+                }
+
+                dialog.show(supportFragmentManager, "deleteNote")
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun deleteNote() {
+        val intent = Intent(ACTION_DELETE)
+        intent.putExtra(EXTRA_NOTE, note)
+        intent.putExtra(EXTRA_NOTE_INDEX, noteIndex)
+
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
 
     private fun saveNote() {
@@ -73,7 +95,7 @@ class NoteDetailActivity : AppCompatActivity() {
         intent.putExtra(EXTRA_NOTE, note)
         intent.putExtra(EXTRA_NOTE_INDEX, noteIndex)
 
-        setResult(EDIT_NOTE_REQUEST_CODE,intent)
+        setResult(Activity.RESULT_OK,intent)
         finish()
     }
 }
